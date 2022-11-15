@@ -41,7 +41,7 @@ if (isset($_POST['name'], $_POST['status'])) {
         <ol class="breadcrumb">
             <li><a href="/session11/admin"><i class="fa fa-dashboard"></i>Home</a></li>
             <li>Category management</li>
-            <li class="active"><a href="?page=category/add_category.php">Add category</a></li>
+            <li class="active"><a href="?page=category/edit_category.php">Edit category</a></li>
         </ol>
     </section>
 

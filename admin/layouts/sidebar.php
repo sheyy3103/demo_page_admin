@@ -47,16 +47,18 @@
                     <li><a href="?page=category/add_category.php"><i class="fa fa-circle-o"></i> Add category</a></li>
                 </ul>
             </li>
-
-            <li>
+            <li class="treeview">
                 <a href="">
-                    <i class="fa fa-th"></i> <span>Widgets</span>
+                    <i class="fa fa-dashboard"></i> <span>Product management</span>
                     <span class="pull-right-container">
-                        <small class="label pull-right bg-green">Hot</small>
+                        <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
+                <ul class="treeview-menu">
+                    <li><a href="?page=product/product.php"><i class="fa fa-circle-o"></i> All product</a></li>
+                    <li><a href="?page=product/add_product.php"><i class="fa fa-circle-o"></i> Add product</a></li>
+                </ul>
             </li>
-
         </ul>
     </section>
     <!-- /.sidebar -->
