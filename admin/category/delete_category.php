@@ -7,3 +7,4 @@
         header('location: ?page=category/category.php');
         exit();
     }
+?>
