@@ -14,7 +14,8 @@ $products = $conn->query("$sql LIMIT $start, $limit");
 $url = $_SERVER['REQUEST_URI'];
 
 if (!empty(strpos($url,'&p='))) {
-    $urli = substr($url,0,-4);
+    // $urli = substr($url,0,-4);
+    $urli = str_replace("&p=$current_page","",$url);
 }else{
     $urli = $url;
 }
