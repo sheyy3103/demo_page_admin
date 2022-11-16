@@ -2,6 +2,12 @@
 include 'connection/connect.php';
 $sql = "Select p.*, c.name as category_name from product p join category c on p.category_id = c.id";
 $products = $conn->query($sql);
+$total = mysqli_num_rows($products);
+$limit = 4;
+$total_page = ceil($total / $limit);
+$current_page = isset($_GET['p']) ? $_GET['p'] : 1;
+$start = ($current_page - 1) * $limit;
+$products = $conn->query("Select p.*, c.name as category_name from product p join category c on p.category_id = c.id LIMIT $start, $limit");
 ?>
 
 <div class="content-wrapper">
@@ -53,14 +59,14 @@ $products = $conn->query($sql);
                                                 <?php if ($value['sale_price'] > 0) { ?>
                                                     <strong><strike class="text-muted"><?= $value['price']; ?></strike></strong>
                                                 <?php } else { ?>
-                                                    <span><?= $value['price']; ?></span>
+                                                    <strong><?= $value['price']; ?></strong>
                                                 <?php } ?>
                                             </td>
                                             <td>
                                                 <?= $value['sale_price'] == 0 ? "<span class='text-muted'>0</span>" : $value['sale_price']; ?>
                                             </td>
                                             <td>
-                                                <img src="uploads/<?=$value['image']; ?>" alt="..." height="50px" width="auto">
+                                                <img src="uploads/<?= $value['image']; ?>" alt="..." height="50px" width="auto">
                                             </td>
                                             <td>
                                                 <?= $value['status'] == 1 ? "<span class='text-success'>In stock</span>" : "<span class='text-warning'>Out of stock</span>"; ?>
@@ -78,6 +84,17 @@ $products = $conn->query($sql);
                             </table>
                         </div>
                     </div>
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="?page=product/product.php&p=<?= $current_page > 1 ? $current_page - 1 : 1; ?>"><small><<</small></a>
+                        </li>
+                        <?php for ($i = 1; $i <= $total_page; $i++) : ?>
+                            <li class="page-item <?= $i == $current_page ? 'active' : ''; ?>"><a class="page-link" href="?page=product/product.php&p=<?= $i; ?>"><?= $i; ?></a></li>
+                        <?php endfor; ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?page=product/product.php&p=<?= $current_page < $total_page ? $current_page + 1 : $total_page; ?>"><small>>></small></a>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <!-- /.box-body -->
