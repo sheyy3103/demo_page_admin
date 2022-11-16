@@ -57,7 +57,7 @@ $products = $conn->query($sql);
                                                 <?php } ?>
                                             </td>
                                             <td>
-                                                <?= $value['sale_price']; ?>
+                                                <?= $value['sale_price'] == 0 ? "<span class='text-muted'>0</span>" : $value['sale_price']; ?>
                                             </td>
                                             <td>
                                                 <img src="uploads/<?=$value['image']; ?>" alt="..." height="50px" width="auto">
