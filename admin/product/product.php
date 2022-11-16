@@ -1,13 +1,23 @@
 <?php
 include 'connection/connect.php';
-$sql = "Select p.*, c.name as category_name from product p join category c on p.category_id = c.id";
+$name = isset($_GET['name']) ? $_GET['name'] : '';
+$status = isset($_GET['status']) ? $_GET['status'] : '';
+$sql = "Select p.*, c.name as category_name from product p join category c on p.category_id = c.id WHERE p.name LIKE '%$name%' and p.status like '%$status%'";
+
 $products = $conn->query($sql);
 $total = mysqli_num_rows($products);
 $limit = 4;
 $total_page = ceil($total / $limit);
 $current_page = isset($_GET['p']) ? $_GET['p'] : 1;
 $start = ($current_page - 1) * $limit;
-$products = $conn->query("Select p.*, c.name as category_name from product p join category c on p.category_id = c.id LIMIT $start, $limit");
+$products = $conn->query("$sql LIMIT $start, $limit");
+$url = $_SERVER['REQUEST_URI'];
+
+if (!empty(strpos($url,'&p='))) {
+    $urli = substr($url,0,-4);
+}else{
+    $urli = $url;
+}
 ?>
 
 <div class="content-wrapper">
@@ -30,6 +40,20 @@ $products = $conn->query("Select p.*, c.name as category_name from product p joi
         <!-- Default box -->
         <div class="box">
             <div class="box-body">
+                <div class="container">
+                    <form action="product/search_product.php" method="GET">
+                        <label for="" class="h3">Search<small>&nbsp;here</small></label>
+                        <div class="form-group" style="display: flex; width: 60%;">
+                            <input type="text" class="form-control" name="name" style="width: 55%;" id="" aria-describedby="helpId" placeholder="Enter product's name..." value="<?= isset($name) ? $name : ''; ?>">
+                            <select name="status" class="custom-select form-control" style="width: 30%;">
+                                <option value="">-- Choose status --</option>
+                                <option value="1" <?= $status == 1 ? 'selected' : ''; ?>>In stock</option>
+                                <option value="2" <?= $status == 2 ? 'selected' : ''; ?>>Out of stock</option>
+                            </select>
+                            <button type="submit" name="submit" class="btn btn-warning" style="border-radius: 0;">Search</button>
+                        </div>
+                    </form>
+                </div>
                 <div id="example2_wrapper" class="container">
                     <div class="row align-items-center">
                         <div class="col-lg-12">
@@ -86,13 +110,13 @@ $products = $conn->query("Select p.*, c.name as category_name from product p joi
                     </div>
                     <ul class="pagination">
                         <li class="page-item">
-                            <a class="page-link" href="?page=product/product.php&p=<?= $current_page > 1 ? $current_page - 1 : 1; ?>">&laquo;</a>
+                            <a class="page-link" href="<?= $urli ?>&p=<?= $current_page > 1 ? $current_page - 1 : 1; ?>">&laquo;</a>
                         </li>
                         <?php for ($i = 1; $i <= $total_page; $i++) : ?>
-                            <li class="page-item <?= $i == $current_page ? 'active' : ''; ?>"><a class="page-link" href="?page=product/product.php&p=<?= $i; ?>"><?= $i; ?></a></li>
+                            <li class="page-item <?= $i == $current_page ? 'active' : ''; ?>"><a class="page-link" href="<?= $urli ?>&p=<?= $i; ?>"><?= $i; ?></a></li>
                         <?php endfor; ?>
                         <li class="page-item">
-                            <a class="page-link" href="?page=product/product.php&p=<?= $current_page < $total_page ? $current_page + 1 : $total_page; ?>">&raquo;</a>
+                            <a class="page-link" href="<?= $urli ?>&p=<?= $current_page < $total_page ? $current_page + 1 : $total_page; ?>">&raquo;</a>
                         </li>
                     </ul>
                 </div>
