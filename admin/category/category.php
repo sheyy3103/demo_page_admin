@@ -44,7 +44,7 @@ $categories = $conn->query($sql);
                                             <td><?= $value['status'] == 1 ? "<span class='text-success'>Display</span>" : "<span class='text-warning'>Hidden</span>"; ?></td>
                                             <td style="width: 25%;">
                                                 <a href="?page=category/edit_category.php&id=<?= $value['id']?>" type="button" class="btn btn-primary text-uppercase" style="border-radius: 0;">edit</a>
-                                                <a href="?page=category/delete_category.php&id=<?= $value['id']?>" onclick="return confirm('Are you sure about that?')" type="button" class="btn btn-danger text-uppercase" style="border-radius: 0;">delete</a>
+                                                <a href="?page=category/delete_category.php&id=<?= $value['id']?>" onclick="return confirm('If you delete this category, all product of this category will be deleted. Continue?')" type="button" class="btn btn-danger text-uppercase" style="border-radius: 0;">delete</a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

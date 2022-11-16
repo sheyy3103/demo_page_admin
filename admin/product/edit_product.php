@@ -1,12 +1,14 @@
 <?php
 include 'connection/connect.php';
+$id = isset($_GET['id']) ? $_GET['id'] : '';
 $categories = $conn->query("Select * from category");
-$products = $conn->query("Select * from product");
+$result = $conn->query("Select * from product where id = '$id'");
+$row = $result -> fetch_assoc();
 $errors = [];
 if (isset($_POST['submit'])) {
     $name = $_POST['name'];
     $price = $_POST['price'];
-    $sale_price = !empty($_POST['sale_price']) ? $_POST['sale_price'] : 0;
+    $sale_price = $_POST['sale_price'];
     $status = $_POST['status'];
     $category_id = $_POST['category_id'];
     if (empty($name)) {
@@ -29,6 +31,7 @@ if (isset($_POST['submit'])) {
         $errors['category'] = 'Please select category';
     }
     if (!empty($_FILES['image']['name'])) {
+        unlink('uploads/'. $row['image']);
         $file = $_FILES['image'];
         $file_name = time() . '-' . $file['name'];
         if (preg_match("/^.*\.(jpg|jpeg|png|gif)$/i", $file_name)) {
@@ -37,10 +40,10 @@ if (isset($_POST['submit'])) {
             $errors['image'] = 'Invalid image';
         }
     } else {
-        $errors['image'] = 'Please select image';
+        $file_name = $row['image'];
     }
     if (empty($errors)) {
-        $sql = "Insert into product(name,price,sale_price,image,status,category_id) values ('$name',$price,$sale_price,'$file_name',$status,$category_id)";
+        $sql = "Update product set name = '$name', price = $price, sale_price = $sale_price, image = '$file_name', status = $status, category_id = $category_id where id = '$id'";
         $conn->query($sql);
         header('location: ?page=product/product.php');
         // echo "<script> location.href = '?page=category/category.php'</script>";
@@ -72,21 +75,21 @@ if (isset($_POST['submit'])) {
                 <form action="" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="">Product name</label>
-                        <input type="text" name="name" class="form-control mb-3" placeholder="Enter new product name here..." value="<?= isset($name) ? $name : ''; ?>">
+                        <input type="text" name="name" class="form-control mb-3" placeholder="Enter new product name here..." value="<?= isset($name) ? $name : $row['name']; ?>">
                         <?php if (!empty($errors['name'])) : ?>
                             <strong class="text-danger"><?= $errors['name']; ?></strong>
                         <?php endif; ?>
                     </div>
                     <div class="form-group">
                         <label for="">Price</label>
-                        <input type="text" name="price" class="form-control mb-3" placeholder="Enter price here..." value="<?= isset($price) ? $price : ''; ?>">
+                        <input type="text" name="price" class="form-control mb-3" placeholder="Enter price here..." value="<?= isset($price) ? $price : $row['price']; ?>">
                         <?php if (!empty($errors['price'])) : ?>
                             <strong class="text-danger"><?= $errors['price']; ?></strong>
                         <?php endif; ?>
                     </div>
                     <div class="form-group">
                         <label for="">Sale_price</label>
-                        <input type="text" name="sale_price" class="form-control mb-3" placeholder="Enter sale price here..." value="<?= isset($sale_price) ? $sale_price : ''; ?>">
+                        <input type="text" name="sale_price" class="form-control mb-3" placeholder="Enter sale price here..." value="<?= isset($sale_price) ? $sale_price :$row['sale_price']; ?>">
                         <?php if (!empty($errors['sale_price'])) : ?>
                             <strong class="text-danger"><?= $errors['sale_price']; ?></strong>
                         <?php endif; ?>
@@ -101,9 +104,9 @@ if (isset($_POST['submit'])) {
                     <div class="form-group">
                         <label for="">Status</label>
                         <select name="status" class="custom-select form-control">
-                            <option value="" selected>-- Select --</option>
-                            <option value="1">In stock</option>
-                            <option value="2">Out of stock</option>
+                            <option value="">-- Select --</option>
+                            <option value="1" <?= $row['status'] == 1 ? 'selected' : ''; ?>>In stock</option>
+                            <option value="2" <?= $row['status'] == 2 ? 'selected' : ''; ?>>Out of stock</option>
                         </select>
                         <?php if (!empty($errors['status'])) : ?>
                             <strong class="text-danger"><?= $errors['status']; ?></strong>
@@ -112,16 +115,16 @@ if (isset($_POST['submit'])) {
                     <div class="form-group">
                         <label for="">Category</label>
                         <select name="category_id" class="custom-select form-control">
-                            <option value="" selected>-- Select --</option>
+                            <option value="">-- Select --</option>
                             <?php foreach ($categories as $key => $value) : ?>
-                                <option value="<?= $value['id']; ?>"><?= $value['name']; ?></option>
+                                <option value="<?= $value['id']; ?>" <?= $row['category_id'] == $value['id'] ? 'selected' : '' ?>><?= $value['name']; ?></option>
                             <?php endforeach; ?>
                         </select>
                         <?php if (!empty($errors['category'])) : ?>
                             <strong class="text-danger"><?= $errors['category']; ?></strong>
                         <?php endif; ?>
                     </div>
-                    <button type="submit" name="submit" class=" btn btn-success text-uppercase" style="border-radius: 0; width: 10%; padding: 7px 0;">Add</button>
+                    <button type="submit" name="submit" class=" btn btn-primary text-uppercase" style="border-radius: 0; width: 10%; padding: 7px 0;">edit</button>
                 </form>
             </div>
             <!-- /.box-body -->
