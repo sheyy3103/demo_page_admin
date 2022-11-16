@@ -86,13 +86,13 @@ $products = $conn->query("Select p.*, c.name as category_name from product p joi
                     </div>
                     <ul class="pagination">
                         <li class="page-item">
-                            <a class="page-link" href="?page=product/product.php&p=<?= $current_page > 1 ? $current_page - 1 : 1; ?>"><small><<</small></a>
+                            <a class="page-link" href="?page=product/product.php&p=<?= $current_page > 1 ? $current_page - 1 : 1; ?>">&laquo;</a>
                         </li>
                         <?php for ($i = 1; $i <= $total_page; $i++) : ?>
                             <li class="page-item <?= $i == $current_page ? 'active' : ''; ?>"><a class="page-link" href="?page=product/product.php&p=<?= $i; ?>"><?= $i; ?></a></li>
                         <?php endfor; ?>
                         <li class="page-item">
-                            <a class="page-link" href="?page=product/product.php&p=<?= $current_page < $total_page ? $current_page + 1 : $total_page; ?>"><small>>></small></a>
+                            <a class="page-link" href="?page=product/product.php&p=<?= $current_page < $total_page ? $current_page + 1 : $total_page; ?>">&raquo;</a>
                         </li>
                     </ul>
                 </div>
