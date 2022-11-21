@@ -1,3 +1,4 @@
+<?php ob_start() ?>
 <!DOCTYPE html>
 <html>
 
@@ -32,10 +33,10 @@
         <!-- =============================================== -->
         <?php if (isset($_GET['page'])) {
             $page = $_GET['page'];
-        }else {
+        } else {
             $page = 'dashboard/index.php';
         }
-            include $page;
+        include $page;
         ?>
         <!-- Content Wrapper. Contains page content -->
         <!-- /.content-wrapper -->
